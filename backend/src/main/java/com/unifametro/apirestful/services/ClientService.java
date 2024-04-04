@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.unifametro.apirestful.dto.ClientDTO;
 import com.unifametro.apirestful.entities.Client;
 import com.unifametro.apirestful.repositories.ClientRepository;
+import com.unifametro.apirestful.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class ClientService {
@@ -28,7 +29,7 @@ public class ClientService {
 	public ClientDTO findById(Long id) {
 		
 		Optional<Client> obj = repository.findById(id);
-		Client entity = obj.get();
+		Client entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 		
 		return new ClientDTO(entity);
 	}
