@@ -27,6 +27,7 @@ public class ClientService {
 		return list.map(x -> new ClientDTO(x));
 	}
 
+	@Transactional
 	public ClientDTO findById(Long id) {
 		
 		Optional<Client> obj = repository.findById(id);
@@ -35,7 +36,7 @@ public class ClientService {
 		return new ClientDTO(entity);
 	}
 	
-	
+	@Transactional
 	public ClientDTO insert(ClientDTO dto) {
 		
 		Client entity = new Client();
@@ -48,5 +49,24 @@ public class ClientService {
 		entity = repository.save(entity);
 		
 		return new ClientDTO(entity);
+	}
+	
+	@Transactional
+	public ClientDTO update(Long id, ClientDTO dto) {
+		try {
+		Client entity = repository.getReferenceById(id);
+		
+		entity.setName(dto.getName());
+		entity.setCpf(dto.getCpf());
+		entity.setBirthDate(dto.getBirthDate());
+		entity.setIncome(dto.getIncome());
+		
+		entity = repository.save(entity);
+		
+		return new ClientDTO(entity);
+		}
+		catch(ResourceNotFoundException e) {
+			throw new ResourceNotFoundException("Id not found" + id);
+		}
 	}
 }
